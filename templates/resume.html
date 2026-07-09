@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Resume Analyzer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#0f172a;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:100vh;
+
+}
+
+.container{
+
+width:550px;
+
+background:#1e293b;
+
+padding:40px;
+
+border-radius:20px;
+
+text-align:center;
+
+color:white;
+
+box-shadow:0 0 30px rgba(0,0,0,.4);
+
+}
+
+h1{
+
+margin-bottom:15px;
+
+color:#38bdf8;
+
+}
+
+p{
+
+margin-bottom:30px;
+
+color:#cbd5e1;
+
+}
+
+input{
+
+margin:20px 0;
+
+width:100%;
+
+padding:15px;
+
+background:#334155;
+
+color:white;
+
+border:none;
+
+border-radius:10px;
+
+}
+
+button{
+
+padding:15px 30px;
+
+background:#38bdf8;
+
+border:none;
+
+border-radius:10px;
+
+font-size:18px;
+
+color:white;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+background:#0284c7;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AI Resume Analyzer</h1>
+
+<p>
+
+Upload your Resume (PDF) and let Gemini AI analyze it.
+
+</p>
+
+<form action="/resume" method="POST" enctype="multipart/form-data">
+
+<input
+type="file"
+name="resume"
+accept=".pdf"
+required>
+
+<br>
+
+<button>
+
+Analyze Resume
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

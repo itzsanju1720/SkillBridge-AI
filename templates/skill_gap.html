@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Skill Gap Analyzer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+background:#0f172a;
+font-family:Poppins,sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+width:700px;
+background:#1e293b;
+padding:40px;
+border-radius:20px;
+color:white;
+}
+
+input,textarea{
+width:100%;
+padding:15px;
+margin:15px 0;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
+
+button{
+padding:15px 30px;
+background:#38bdf8;
+border:none;
+color:white;
+border-radius:10px;
+cursor:pointer;
+font-size:17px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>📊 AI Skill Gap Analyzer</h1>
+
+<form method="POST">
+
+<input
+type="text"
+name="dream_job"
+placeholder="Dream Job (Example: AI Engineer)"
+required>
+
+<textarea
+name="skills"
+rows="6"
+placeholder="Write your current skills (Python, HTML, C++, SQL...)"
+required></textarea>
+
+<button>
+
+Analyze Skills
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
