@@ -3,8 +3,9 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 import PyPDF2
-from database import db, Resume
+from database import db, Resume, User
 from sqlalchemy import desc
+from flask import session
 
 # -----------------------------
 # Load Environment Variables
@@ -16,6 +17,7 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 app = Flask(__name__)
+app.secret_key = "skillbridge_secret"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///skillbridge.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -32,6 +34,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 USER_EMAIL = "admin@skillbridge.com"
 USER_PASSWORD = "123456"
+
+
 
 # -----------------------------
 # Home
@@ -52,17 +56,55 @@ def login():
 
         email = request.form.get("email")
         password = request.form.get("password")
+        user = User.query.filter_by(
+            email=email,
+            password=password
+        ).first()
 
-        if email == USER_EMAIL and password == USER_PASSWORD:
-            return redirect(url_for("dashboard"))
+        if user:
+
+           session["user_id"] = user.id
+           session["user_name"] = user.name
+
+           return redirect(url_for("dashboard"))
 
         else:
-            return render_template(
+             return render_template(
                 "login.html",
                 error="Invalid Email or Password"
             )
 
     return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        existing = User.query.filter_by(email=email).first()
+
+        if existing:
+            return render_template(
+                "register.html",
+                error="Email already exists"
+            )
+
+        user = User(
+            name=name,
+            email=email,
+            password=password
+        )
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
 
 # -----------------------------
 # Dashboard
@@ -70,7 +112,14 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    return render_template(
+        "dashboard.html",
+        username=session["user_name"]
+    )
 
 # -----------------------------
 # Resume Upload Page
@@ -277,7 +326,8 @@ Resume:
 
     new_resume = Resume(
         filename=file.filename,
-        result=response.text
+        result=response.text,
+        user_id=session["user_id"]
     )
 
     db.session.add(new_resume)
@@ -295,7 +345,9 @@ Resume:
 @app.route("/history")
 def history():
 
-    reports = Resume.query.order_by(desc(Resume.id)).all()
+    reports = Resume.query.filter_by(
+       user_id=session["user_id"]
+    ).order_by(desc(Resume.id)).all()
 
     return render_template(
         "history.html",
@@ -303,6 +355,9 @@ def history():
     )
 @app.route("/logout")
 def logout():
+
+    session.clear()
+
     return redirect(url_for("login"))
 
 

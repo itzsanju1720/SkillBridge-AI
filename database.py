@@ -17,3 +17,5 @@ class Resume(db.Model):
     filename = db.Column(db.String(200))
 
     result = db.Column(db.Text)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
