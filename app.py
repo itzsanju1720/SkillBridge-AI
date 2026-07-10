@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import PyPDF2
 from database import db, Resume
+from sqlalchemy import desc
 
 # -----------------------------
 # Load Environment Variables
@@ -291,6 +292,19 @@ Resume:
 # -----------------------------
 # Gemini Test
 # -----------------------------
+@app.route("/history")
+def history():
+
+    reports = Resume.query.order_by(desc(Resume.id)).all()
+
+    return render_template(
+        "history.html",
+        reports=reports
+    )
+@app.route("/logout")
+def logout():
+    return redirect(url_for("login"))
+
 
 @app.route("/test-ai")
 def test_ai():
