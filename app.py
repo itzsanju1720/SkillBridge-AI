@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 import os
 import PyPDF2
@@ -12,9 +12,9 @@ from flask import session
 # -----------------------------
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel("gemini-2.0-flash")
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
 app = Flask(__name__)
 app.secret_key = "skillbridge_secret"
@@ -160,7 +160,10 @@ Include:
 
 """
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+          model="gemini-2.5-flash",
+          contents=prompt
+        )
 
         return render_template(
             "roadmap_result.html",
@@ -194,7 +197,10 @@ Question:
 Provide practical, beginner-friendly guidance.
 """
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt
+)
 
         return render_template(
             "chat_result.html",
@@ -223,7 +229,10 @@ Generate:
 for a {role}.
 """
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt
+)
 
         return render_template(
             "interview_result.html",
@@ -261,7 +270,10 @@ Generate:
 8. Salary Range in India
 """
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt
+)
 
         return render_template(
             "skill_result.html",
@@ -322,7 +334,10 @@ Resume:
 {text}
 """
 
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt
+)
 
     new_resume = Resume(
         filename=file.filename,
@@ -364,9 +379,10 @@ def logout():
 @app.route("/test-ai")
 def test_ai():
 
-    response = model.generate_content(
-        "Give 5 skills required to become an AI Engineer."
-    )
+    response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents="Give 5 skills required to become an AI Engineer."
+)
 
     return response.text
 
