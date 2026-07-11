@@ -19,3 +19,5 @@ class Resume(db.Model):
     result = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    from flask_sqlalchemy import SQLAlchemy
+
